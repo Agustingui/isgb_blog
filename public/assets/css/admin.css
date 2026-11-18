@@ -1,0 +1,1208 @@
+/**
+ * Estilos del panel de administración (complementan Bootstrap 5).
+ *
+ * Índice:
+ *   1. Variables, colores del instituto aplicados a Bootstrap y base
+ *   2. Estructura: menú lateral y barra superior
+ *   3. Encabezado de página, avisos y estados vacíos
+ *   4. Panel de inicio
+ *   5. Listados (DataTables)
+ *   6. Formularios
+ *   7. Editor Quill
+ *   8. Responsive
+ */
+
+/* ==========================================================================
+   1. Variables y base
+   ========================================================================== */
+
+:root {
+    --ink: #0f2a43;
+    --ink-soft: #4c6c86;
+    --line: #dde7ee;
+    --fondo: #f3f7fa;
+    --celeste: #1470a6;
+    --celeste-strong: #0f5c89;
+    --celeste-deep: #0b4c7c;
+    --celeste-deep-2: #0a3b63;
+    --celeste-soft: #e4f2fb;
+    --fuente-titulo: Georgia, "Iowan Old Style", "Palatino Linotype", "Book Antiqua", serif;
+    --alto-barra: 3.6rem;
+    --sombra-suave: 0 1px 2px rgba(15, 42, 67, 0.05), 0 1px 3px rgba(15, 42, 67, 0.06);
+
+    /* Bootstrap usa su azul (#0d6efd) en botones, enlaces y foco: se reemplaza por el celeste del sitio. */
+    --bs-primary: var(--celeste);
+    --bs-primary-rgb: 20, 112, 166;
+    --bs-link-color: var(--celeste);
+    --bs-link-color-rgb: 20, 112, 166;
+    --bs-link-hover-color: var(--celeste-strong);
+    --bs-link-hover-color-rgb: 15, 92, 137;
+    --bs-body-color: var(--ink);
+    --bs-border-color: var(--line);
+    --bs-focus-ring-color: rgba(20, 112, 166, 0.25);
+}
+
+body {
+    background: var(--fondo);
+    color: var(--ink);
+}
+
+.btn-primary {
+    --bs-btn-bg: var(--celeste);
+    --bs-btn-border-color: var(--celeste);
+    --bs-btn-hover-bg: var(--celeste-strong);
+    --bs-btn-hover-border-color: var(--celeste-strong);
+    --bs-btn-active-bg: var(--celeste-deep);
+    --bs-btn-active-border-color: var(--celeste-deep);
+    --bs-btn-disabled-bg: var(--celeste);
+    --bs-btn-disabled-border-color: var(--celeste);
+    --bs-btn-focus-shadow-rgb: 20, 112, 166;
+}
+
+.btn-outline-primary {
+    --bs-btn-color: var(--celeste);
+    --bs-btn-border-color: var(--celeste);
+    --bs-btn-hover-bg: var(--celeste);
+    --bs-btn-hover-border-color: var(--celeste);
+    --bs-btn-active-bg: var(--celeste-strong);
+    --bs-btn-active-border-color: var(--celeste-strong);
+    --bs-btn-focus-shadow-rgb: 20, 112, 166;
+}
+
+/* Botón secundario claro (Cancelar, Papelera): menos peso visual que el gris de Bootstrap. */
+.btn-suave {
+    --bs-btn-color: var(--ink);
+    --bs-btn-bg: #fff;
+    --bs-btn-border-color: var(--line);
+    --bs-btn-hover-color: var(--ink);
+    --bs-btn-hover-bg: #eef4f8;
+    --bs-btn-hover-border-color: #cddbe5;
+    --bs-btn-active-bg: #e4edf3;
+    --bs-btn-active-border-color: #cddbe5;
+}
+
+.form-control:focus,
+.form-select:focus,
+.form-check-input:focus {
+    border-color: #7fb4d6;
+    box-shadow: 0 0 0 0.25rem var(--bs-focus-ring-color);
+}
+
+.form-check-input:checked {
+    background-color: var(--celeste);
+    border-color: var(--celeste);
+}
+
+.material-symbols-outlined {
+    font-size: 1.2em;
+    vertical-align: middle;
+    line-height: 1;
+}
+
+.card {
+    border-color: var(--line);
+    border-radius: 0.75rem;
+    box-shadow: var(--sombra-suave);
+}
+
+.card-header {
+    background: #fff;
+    border-bottom-color: var(--line);
+    border-radius: 0.75rem 0.75rem 0 0 !important;
+    padding: 0.85rem 1.25rem;
+}
+
+.card-titulo {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.card-titulo .material-symbols-outlined {
+    color: var(--celeste);
+}
+
+/* ==========================================================================
+   2. Estructura: menú lateral y barra superior
+   ========================================================================== */
+
+.admin-contenedor {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* El menú queda fijo al hacer scroll en pantallas medianas y grandes. */
+.admin-menu {
+    width: 248px;
+    flex-shrink: 0;
+    background: var(--celeste-deep-2);
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+}
+
+.admin-menu .offcanvas-md {
+    --bs-offcanvas-bg: var(--celeste-deep-2);
+    --bs-offcanvas-width: 270px;
+    height: 100%;
+}
+
+.admin-menu .offcanvas-body {
+    display: flex;
+    flex-direction: column;
+    padding: 1.25rem 0.85rem;
+    height: 100%;
+}
+
+.admin-marca {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.1rem;
+    padding: 0 0.5rem 1.5rem;
+    text-decoration: none;
+}
+
+.admin-marca:hover {
+    color: #fff;
+}
+
+.admin-logo {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+}
+
+.admin-marca small {
+    display: block;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+/* Títulos de grupo del menú ("Contenido", "Institución"). */
+.admin-menu .menu-grupo {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.45);
+    padding: 1rem 0.75rem 0.4rem;
+    margin: 0;
+}
+
+.admin-menu .nav-link {
+    color: rgba(255, 255, 255, 0.82);
+    border-radius: 0.5rem;
+    padding: 0.55rem 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    font-size: 0.92rem;
+    margin-bottom: 2px;
+    transition: background-color 0.15s, color 0.15s;
+}
+
+.admin-menu .nav-link .material-symbols-outlined {
+    font-size: 1.3rem;
+    opacity: 0.85;
+}
+
+.admin-menu .nav-link:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+}
+
+.admin-menu .nav-link:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: -2px;
+}
+
+.admin-menu .nav-link.activo {
+    background: var(--celeste);
+    color: #fff;
+    font-weight: 600;
+    box-shadow: inset 3px 0 0 #7cc4ee;
+}
+
+.admin-menu .nav-link.activo .material-symbols-outlined {
+    opacity: 1;
+}
+
+/* "Ver sitio" al pie del menú. */
+.admin-menu .menu-pie {
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.admin-principal {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.admin-barra {
+    position: sticky;
+    top: 0;
+    z-index: 1020;
+    min-height: var(--alto-barra);
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+    padding: 0.5rem 1.75rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.admin-barra .seccion-actual {
+    font-size: 0.875rem;
+    color: var(--ink-soft);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Persona conectada: iniciales en un círculo, nombre y rol. */
+.usuario-actual {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    line-height: 1.15;
+}
+
+.avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--celeste-soft);
+    color: var(--celeste-deep);
+    font-weight: 700;
+    font-size: 0.8rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    text-transform: uppercase;
+}
+
+.usuario-actual .nombre {
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.usuario-actual .rol {
+    font-size: 0.72rem;
+    color: var(--ink-soft);
+    text-transform: capitalize;
+}
+
+.admin-contenido {
+    padding: 1.75rem;
+    max-width: 1400px;
+    width: 100%;
+}
+
+/* ==========================================================================
+   3. Encabezado de página, avisos y estados vacíos
+   ========================================================================== */
+
+.encabezado-pagina {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.encabezado-pagina h1 {
+    font-family: var(--fuente-titulo);
+    font-size: 1.75rem;
+    margin: 0;
+    color: var(--ink);
+}
+
+.encabezado-pagina .descripcion {
+    color: var(--ink-soft);
+    font-size: 0.9rem;
+    margin: 0.35rem 0 0;
+}
+
+.enlace-volver {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--ink-soft);
+    text-decoration: none;
+    margin-bottom: 0.4rem;
+}
+
+.enlace-volver:hover {
+    color: var(--celeste);
+}
+
+#avisos .alert {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    border-radius: 0.6rem;
+    box-shadow: var(--sombra-suave);
+}
+
+#avisos .alert > .material-symbols-outlined {
+    font-size: 1.35rem;
+}
+
+/* Lista vacía: explica qué va ahí y ofrece la acción para empezar. */
+.estado-vacio {
+    text-align: center;
+    padding: 3.5rem 1.5rem;
+}
+
+.estado-vacio .icono {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: var(--celeste-soft);
+    color: var(--celeste);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.estado-vacio .icono .material-symbols-outlined {
+    font-size: 2.2rem;
+}
+
+.estado-vacio h2 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin-bottom: 0.35rem;
+}
+
+.estado-vacio p {
+    color: var(--ink-soft);
+    max-width: 28rem;
+    margin: 0 auto 1.25rem;
+}
+
+/* ==========================================================================
+   4. Panel de inicio
+   ========================================================================== */
+
+.acciones-rapidas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.tarjeta-dato {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 0.75rem;
+    box-shadow: var(--sombra-suave);
+    padding: 1.1rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: inherit;
+    text-decoration: none;
+    height: 100%;
+    transition: box-shadow 0.15s, transform 0.15s, border-color 0.15s;
+}
+
+.tarjeta-dato:hover {
+    border-color: #c5dbea;
+    box-shadow: 0 8px 20px rgba(15, 42, 67, 0.09);
+    transform: translateY(-1px);
+    color: inherit;
+}
+
+.tarjeta-dato .icono {
+    width: 46px;
+    height: 46px;
+    border-radius: 0.65rem;
+    background: var(--celeste-soft);
+    color: var(--celeste-deep);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.tarjeta-dato .icono .material-symbols-outlined {
+    font-size: 1.5rem;
+}
+
+.tarjeta-dato strong {
+    font-size: 1.65rem;
+    line-height: 1;
+    display: block;
+    margin-bottom: 0.2rem;
+}
+
+.tarjeta-dato .etiqueta {
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+}
+
+.tarjeta-dato .nota {
+    display: block;
+    font-size: 0.75rem;
+    color: #a15c00;
+    margin-top: 0.15rem;
+}
+
+/* Listas "Últimas noticias" y "Posteos recientes". */
+.lista-reciente {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.lista-reciente li + li {
+    border-top: 1px solid var(--line);
+}
+
+.lista-reciente a {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 1.25rem;
+    color: inherit;
+    text-decoration: none;
+}
+
+.lista-reciente a:hover {
+    background: #f7fafc;
+}
+
+.lista-reciente .titulo {
+    font-weight: 500;
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.lista-reciente .meta {
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+}
+
+.lista-reciente .vacia {
+    padding: 1.5rem 1.25rem;
+    color: var(--ink-soft);
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+/* ==========================================================================
+   5. Listados (DataTables)
+   ========================================================================== */
+
+.card-listado > .card-body {
+    padding: 1rem 1.25rem;
+}
+
+.table {
+    --bs-table-hover-bg: #f5f9fc;
+    margin-bottom: 0;
+}
+
+.table > thead th {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--ink-soft);
+    background: #f7fafc;
+    border-bottom: 1px solid var(--line);
+    white-space: nowrap;
+}
+
+.table > :not(caption) > * > * {
+    padding: 0.8rem 0.75rem;
+    border-color: var(--line);
+}
+
+/* Título de la fila: enlace a editar, con un dato secundario debajo. */
+.celda-principal a {
+    font-weight: 600;
+    color: var(--ink);
+    text-decoration: none;
+}
+
+.celda-principal a:hover {
+    color: var(--celeste);
+    text-decoration: underline;
+}
+
+.celda-principal {
+    min-width: 260px;
+}
+
+/* Dato secundario en hasta dos renglones; los nombres de archivo largos se cortan donde haga falta. */
+.celda-principal .secundario {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    font-size: 0.8rem;
+    color: var(--ink-soft);
+    margin-top: 0.1rem;
+    overflow-wrap: anywhere;
+}
+
+/* DataTables alinea a la derecha las columnas que detecta como fecha: se dejan como el resto. */
+table.dataTable th.dt-type-date,
+table.dataTable td.dt-type-date {
+    text-align: left;
+}
+
+/* Botones de acción de cada fila: solo ícono, discretos hasta pasar el mouse. */
+.acciones-fila {
+    display: inline-flex;
+    gap: 0.25rem;
+}
+
+.btn-icono {
+    --bs-btn-padding-x: 0.4rem;
+    --bs-btn-padding-y: 0.3rem;
+    --bs-btn-color: var(--ink-soft);
+    --bs-btn-bg: transparent;
+    --bs-btn-border-color: transparent;
+    --bs-btn-hover-color: var(--celeste);
+    --bs-btn-hover-bg: var(--celeste-soft);
+    --bs-btn-hover-border-color: transparent;
+    --bs-btn-active-bg: var(--celeste-soft);
+    --bs-btn-active-border-color: transparent;
+    line-height: 1;
+}
+
+.btn-icono .material-symbols-outlined {
+    font-size: 1.25rem;
+}
+
+.btn-icono.btn-borrar,
+.btn-icono.peligro {
+    --bs-btn-hover-color: #b02a37;
+    --bs-btn-hover-bg: #fbe9eb;
+    --bs-btn-active-bg: #fbe9eb;
+}
+
+/* Insignias con fondo claro: se leen mejor que los colores llenos de Bootstrap. */
+.insignia {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.25em 0.65em;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 999px;
+    white-space: nowrap;
+}
+
+.insignia::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+}
+
+.insignia-verde { background: #e3f5ea; color: #1e7a45; }
+.insignia-ambar { background: #fff3d6; color: #8a5a00; }
+.insignia-gris { background: #eef1f4; color: #5b6b7a; }
+.insignia-celeste { background: var(--celeste-soft); color: var(--celeste-deep); }
+.insignia-oscura { background: #e1e8f0; color: var(--celeste-deep-2); }
+
+.miniatura {
+    width: 72px;
+    height: 52px;
+    object-fit: cover;
+    border-radius: 0.4rem;
+    border: 1px solid var(--line);
+    background: #fff;
+}
+
+.miniatura-pdf {
+    width: 72px;
+    height: 52px;
+    border-radius: 0.4rem;
+    background: #fdecec;
+    color: #c62828;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.miniatura-pdf .material-symbols-outlined {
+    font-size: 1.8rem;
+}
+
+/* Controles de DataTables: búsqueda, cantidad por página y paginación. */
+.dt-container .dt-search input {
+    min-width: 240px;
+    margin-left: 0.5rem;
+}
+
+.dt-container .dt-info {
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+}
+
+.dt-container .pagination {
+    --bs-pagination-color: var(--celeste);
+    --bs-pagination-hover-color: var(--celeste-strong);
+    --bs-pagination-focus-color: var(--celeste-strong);
+    --bs-pagination-focus-box-shadow: 0 0 0 0.25rem var(--bs-focus-ring-color);
+    --bs-pagination-active-bg: var(--celeste);
+    --bs-pagination-active-border-color: var(--celeste);
+    --bs-pagination-font-size: 0.875rem;
+}
+
+/* La tabla se desplaza de costado en pantallas chicas en lugar de desbordar la tarjeta. */
+.dt-container .dt-layout-table > .dt-layout-cell {
+    overflow-x: auto;
+}
+
+/* ==========================================================================
+   6. Formularios
+   ========================================================================== */
+
+.form-label {
+    font-weight: 500;
+    font-size: 0.92rem;
+}
+
+.form-label .opcional {
+    font-weight: 400;
+    color: var(--ink-soft);
+    font-size: 0.8rem;
+}
+
+.form-text {
+    color: var(--ink-soft);
+}
+
+/* Prefijo de la dirección web delante del slug. */
+.prefijo-url {
+    font-size: 0.82rem;
+    color: var(--ink-soft);
+    background: #f7fafc;
+    max-width: 55%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    line-height: 1.6;
+    white-space: nowrap;
+}
+
+/* Barra de Guardar / Cancelar: queda visible al pie de la pantalla en formularios largos. */
+.barra-acciones {
+    position: sticky;
+    bottom: 0;
+    z-index: 5;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+    padding: 0.85rem 1.25rem;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(6px);
+    border: 1px solid var(--line);
+    border-radius: 0.75rem;
+    box-shadow: 0 -4px 16px rgba(15, 42, 67, 0.06);
+}
+
+.barra-acciones .ayuda {
+    margin-left: auto;
+    font-size: 0.8rem;
+    color: var(--ink-soft);
+}
+
+/* Columna lateral de los formularios de noticias y posteos. */
+@media (min-width: 992px) {
+    .columna-lateral {
+        position: sticky;
+        top: calc(var(--alto-barra) + 1rem);
+    }
+}
+
+/* Selección de rol con tarjetas que explican qué puede hacer cada uno. */
+.opciones-rol {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 0.75rem;
+}
+
+.opcion-rol {
+    position: relative;
+    display: block;
+    border: 1px solid var(--line);
+    border-radius: 0.65rem;
+    padding: 0.85rem 1rem 0.85rem 2.6rem;
+    cursor: pointer;
+    background: #fff;
+    transition: border-color 0.15s, background-color 0.15s;
+}
+
+.opcion-rol:hover {
+    border-color: #b9d3e5;
+}
+
+.opcion-rol .form-check-input {
+    position: absolute;
+    left: 1rem;
+    top: 1.05rem;
+    margin: 0;
+}
+
+.opcion-rol strong {
+    display: block;
+    font-size: 0.92rem;
+}
+
+.opcion-rol span {
+    font-size: 0.8rem;
+    color: var(--ink-soft);
+}
+
+.opcion-rol:has(.form-check-input:checked) {
+    border-color: var(--celeste);
+    background: #f2f8fc;
+    box-shadow: 0 0 0 1px var(--celeste);
+}
+
+/* Zona para elegir un archivo (Subir archivo). */
+.zona-archivo {
+    border: 2px dashed #c5d8e6;
+    border-radius: 0.75rem;
+    background: #f9fbfd;
+    padding: 2rem 1.25rem;
+    text-align: center;
+    transition: border-color 0.15s, background-color 0.15s;
+}
+
+.zona-archivo:hover,
+.zona-archivo:focus-within {
+    border-color: var(--celeste);
+    background: #f2f8fc;
+}
+
+.zona-archivo .material-symbols-outlined {
+    font-size: 2.5rem;
+    color: var(--celeste);
+}
+
+.zona-archivo input[type="file"] {
+    max-width: 420px;
+    margin: 0.75rem auto 0;
+}
+
+/* Archivo PDF actual en el formulario de edición de archivos. */
+.archivo-actual-pdf {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    word-break: break-all;
+    padding: 1rem;
+    border: 1px solid var(--line);
+    border-radius: 0.6rem;
+    background: #fff;
+    text-decoration: none;
+}
+
+/* Datos del instituto: índice y zonas (Portada del sitio / Pie de página). */
+.indice-zonas {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 0.75rem;
+}
+
+.indice-zonas a {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.9rem 1.1rem;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 0.75rem;
+    box-shadow: var(--sombra-suave);
+    color: var(--ink);
+    text-decoration: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.indice-zonas a:hover {
+    border-color: #b9d3e5;
+    box-shadow: 0 6px 16px rgba(15, 42, 67, 0.08);
+}
+
+.indice-zonas .material-symbols-outlined {
+    font-size: 1.6rem;
+    color: var(--celeste);
+}
+
+.indice-zonas strong {
+    display: block;
+    font-size: 0.95rem;
+}
+
+.indice-zonas small {
+    color: var(--ink-soft);
+    font-size: 0.8rem;
+}
+
+.zona {
+    /* Al saltar desde el índice, el título no queda tapado por la barra superior fija. */
+    scroll-margin-top: calc(var(--alto-barra) + 1rem);
+}
+
+.zona + .zona {
+    margin-top: 2.5rem;
+    padding-top: 2.5rem;
+    border-top: 2px dashed var(--line);
+}
+
+.zona-encabezado {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 0.9rem;
+    margin-bottom: 1.25rem;
+}
+
+.zona-numero {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--celeste);
+    color: #fff;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.zona-encabezado h2 {
+    font-family: var(--fuente-titulo);
+    font-size: 1.4rem;
+    margin: 0.1rem 0 0.2rem;
+}
+
+.zona-encabezado p {
+    color: var(--ink-soft);
+    font-size: 0.88rem;
+    margin: 0;
+    max-width: 46rem;
+}
+
+/* Vista previa de la portada del sitio (Datos del instituto). Imita los colores del .hero de publico.css. */
+.vista-portada {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding: 1.75rem;
+    border-radius: 0.75rem;
+    background: linear-gradient(135deg, var(--celeste-deep), var(--celeste-deep-2));
+    color: #fff;
+}
+
+.vista-portada .vp-insignia {
+    align-self: flex-end;
+    background: #fff;
+    color: var(--celeste-deep);
+    border-radius: 999px;
+    padding: 0.3rem 0.75rem;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.vista-portada .vp-etiqueta {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.55);
+}
+
+.vista-portada .vp-titulo {
+    font-family: var(--fuente-titulo);
+    font-size: 1.6rem;
+    line-height: 1.15;
+}
+
+.vista-portada .vp-texto {
+    font-size: 0.88rem;
+    color: rgba(255, 255, 255, 0.82);
+}
+
+.vista-portada .vp-botones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.4rem;
+}
+
+.vista-portada .vp-boton {
+    background: #fff;
+    color: var(--celeste-deep);
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.4rem 0.9rem;
+    border-radius: 0.375rem;
+}
+
+.vista-portada .vp-boton-borde {
+    background: transparent;
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.vista-portada [hidden] {
+    display: none;
+}
+
+/* Modal de borrado. */
+.modal-content {
+    border: 0;
+    border-radius: 0.9rem;
+}
+
+.icono-peligro {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #fbe9eb;
+    color: #b02a37;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+/* ==========================================================================
+   7. Editor Quill
+   ========================================================================== */
+
+
+/*
+ * Quill define .ql-container con height: 100%. Dentro de una columna de una
+ * fila flex de Bootstrap ese 100% toma la altura de toda la columna y, sumado
+ * a la barra de herramientas, el editor se superpone a los campos de abajo.
+ */
+#editor.ql-container {
+    height: auto;
+    font-family: inherit;
+    font-size: 1rem;
+    background: #fff;
+    border-radius: 0 0 var(--bs-border-radius) var(--bs-border-radius);
+}
+
+#editor .ql-editor {
+    min-height: 15rem;
+    line-height: 1.6;
+}
+
+/* Barra de herramientas con el mismo redondeado que los campos de Bootstrap. */
+.ql-toolbar.ql-snow {
+    background: var(--bs-tertiary-bg);
+    border-radius: var(--bs-border-radius) var(--bs-border-radius) 0 0;
+}
+
+/* Vista previa de la imagen de portada (parcial admin/partes/imagen_portada). */
+.vista-imagen img,
+.vista-imagen figcaption {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    border: 1px solid var(--bs-border-color);
+    border-radius: var(--bs-border-radius);
+}
+
+.vista-imagen img {
+    object-fit: cover;
+    background: #fff;
+}
+
+/* En columnas anchas la vista previa no crece de más: es una referencia, no la imagen a tamaño real. */
+.vista-imagen img,
+.vista-imagen figcaption {
+    max-height: 220px;
+}
+
+.vista-imagen figcaption {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-style: dashed;
+    color: var(--bs-secondary-color);
+    font-size: 0.875rem;
+}
+
+.vista-imagen [hidden] {
+    display: none;
+}
+
+/* Contenido obligatorio sin completar: borde rojo como el resto de los campos. */
+#editor.ql-container.is-invalid {
+    border-color: var(--bs-form-invalid-border-color);
+}
+
+/* Barra que aparece sobre una imagen del editor al hacer clic (tamaño y posición, ver admin.js). */
+.ql-editor img {
+    cursor: pointer;
+}
+
+.barra-imagen {
+    position: absolute;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    padding: 4px;
+    background: #fff;
+    border: 1px solid var(--bs-border-color);
+    border-radius: var(--bs-border-radius);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.barra-imagen[hidden] {
+    display: none;
+}
+
+.barra-imagen button {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 6px;
+    font-size: 0.8rem;
+    background: none;
+    border: 0;
+    border-radius: 4px;
+}
+
+.barra-imagen button:hover,
+.barra-imagen button:focus-visible {
+    background: var(--bs-tertiary-bg);
+}
+
+.barra-imagen .material-symbols-outlined {
+    font-size: 1.1rem;
+}
+
+.barra-imagen .separador {
+    width: 1px;
+    align-self: stretch;
+    background: var(--bs-border-color);
+}
+
+/*
+ * Textos de Quill en español. Quill los pone con "content" en su CSS; se usan
+ * los mismos selectores para reemplazarlos (este archivo se carga después).
+ */
+.ql-snow .ql-picker.ql-header .ql-picker-label[data-value="1"]::before,
+.ql-snow .ql-picker.ql-header .ql-picker-item[data-value="1"]::before { content: 'Título 1'; }
+.ql-snow .ql-picker.ql-header .ql-picker-label[data-value="2"]::before,
+.ql-snow .ql-picker.ql-header .ql-picker-item[data-value="2"]::before { content: 'Título 2'; }
+.ql-snow .ql-picker.ql-header .ql-picker-label[data-value="3"]::before,
+.ql-snow .ql-picker.ql-header .ql-picker-item[data-value="3"]::before { content: 'Título 3'; }
+.ql-snow .ql-picker.ql-font .ql-picker-label::before,
+.ql-snow .ql-picker.ql-font .ql-picker-item::before { content: 'Letra normal'; }
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value=serif]::before,
+.ql-snow .ql-picker.ql-font .ql-picker-item[data-value=serif]::before { content: 'Serif'; }
+.ql-snow .ql-picker.ql-font .ql-picker-label[data-value=monospace]::before,
+.ql-snow .ql-picker.ql-font .ql-picker-item[data-value=monospace]::before { content: 'Monoespaciada'; }
+.ql-snow .ql-picker.ql-font { width: 130px; }
+.ql-snow .ql-tooltip::before { content: "Abrir:"; }
+.ql-snow .ql-tooltip a.ql-action::after { content: 'Editar'; }
+.ql-snow .ql-tooltip a.ql-remove::before { content: 'Quitar'; }
+.ql-snow .ql-tooltip.ql-editing a.ql-action::after { content: 'Guardar'; }
+.ql-snow .ql-tooltip[data-mode=link]::before { content: "Dirección del enlace:"; }
+.ql-snow .ql-tooltip[data-mode=video]::before { content: "Enlace del video:"; }
+
+/* La barra de herramientas de Quill acompaña el scroll en textos largos (queda debajo de la barra superior). */
+.ql-toolbar.ql-snow {
+    position: sticky;
+    top: var(--alto-barra);
+    z-index: 3;
+}
+
+/* ==========================================================================
+   8. Responsive: en pantallas chicas el menú lateral se abre con el botón ☰
+   ========================================================================== */
+
+@media (max-width: 767.98px) {
+    /* El <aside> deja de ocupar lugar: el menú pasa a ser un panel deslizable (offcanvas de Bootstrap). */
+    .admin-menu {
+        width: 0;
+        height: auto;
+        position: static;
+        overflow: visible;
+    }
+
+    .admin-menu .offcanvas-header {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .admin-menu .offcanvas-header .admin-marca {
+        padding: 0;
+    }
+
+    /* Dentro del panel la marca ya está en el encabezado. */
+    .admin-menu .offcanvas-body > .admin-marca {
+        display: none;
+    }
+
+    .admin-barra {
+        padding: 0.5rem 1rem;
+    }
+
+    .admin-contenido {
+        padding: 1.25rem 1rem;
+    }
+
+    .card-body.p-4 {
+        padding: 1.1rem !important;
+    }
+
+    .encabezado-pagina h1 {
+        font-size: 1.45rem;
+    }
+
+    .dt-container .dt-search input {
+        min-width: 0;
+        width: 100%;
+        margin-left: 0;
+    }
+
+    .barra-acciones {
+        margin-left: -0.25rem;
+        margin-right: -0.25rem;
+    }
+
+    .barra-acciones .ayuda {
+        display: none;
+    }
+}

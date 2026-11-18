@@ -1,0 +1,625 @@
+/**
+ * Estilos del sitio público (complementan Bootstrap 5).
+ *
+ * Índice:
+ *   1. Variables y base
+ *   2. Barra superior
+ *   3. Portada (hero)
+ *   4. Secciones
+ *   5. Tarjetas y listados
+ *   6. Detalle de noticias, posteos y carreras
+ *   7. Formularios de ingreso
+ *   8. Pie del sitio
+ *   9. Utilidades y componentes de Bootstrap
+ */
+
+/* ==========================================================================
+   1. Variables y base
+   ========================================================================== */
+
+:root {
+    --ink: #0f2a43;
+    --ink-soft: #4c6c86;
+    --line: #d7e6f0;
+    --celeste: #1470a6;
+    --celeste-strong: #0f5c89;
+    --celeste-soft: #e4f2fb;
+    --celeste-deep: #0b4c7c;
+    --celeste-deep-2: #0a3b63;
+    --fuente-titulo: Georgia, "Iowan Old Style", "Palatino Linotype", "Book Antiqua", serif;
+}
+
+body {
+    background: #fbfdff;
+    color: var(--ink);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main {
+    flex: 1;
+}
+
+h1, h2, h3, h4, h5 {
+    font-family: var(--fuente-titulo);
+    color: var(--ink);
+}
+
+a {
+    color: var(--celeste);
+    text-decoration: none;
+}
+
+a:hover {
+    color: var(--celeste-strong);
+}
+
+.material-symbols-outlined {
+    font-size: 1.15em;
+    vertical-align: middle;
+    line-height: 1;
+}
+
+.texto-suave {
+    color: var(--ink-soft);
+}
+
+/* ==========================================================================
+   2. Barra superior
+   ========================================================================== */
+
+.barra-isgb {
+    background: rgba(255, 255, 255, 0.95);
+    border-bottom: 1px solid var(--line);
+    backdrop-filter: blur(6px);
+}
+
+.marca {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--ink);
+}
+
+.marca:hover {
+    color: var(--ink);
+}
+
+/* Logo del instituto (public/img/logo.png, redondo con las esquinas transparentes). */
+.marca-logo {
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+}
+
+.marca-texto {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.15;
+}
+
+.marca-texto small {
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+}
+
+.marca-texto strong {
+    font-family: var(--fuente-titulo);
+    font-size: 1.1rem;
+}
+
+.barra-isgb .nav-link {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--ink-soft);
+    border-bottom: 2px solid transparent;
+    padding: 0.25rem 0;
+    margin: 0 0.9rem;
+}
+
+.barra-isgb .nav-link:hover {
+    color: var(--ink);
+    border-bottom-color: var(--celeste);
+}
+
+.btn-isgb-borde {
+    border: 1px solid var(--line);
+    color: var(--ink);
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.btn-isgb-borde:hover {
+    background: var(--celeste-soft);
+    color: var(--ink);
+}
+
+/* ==========================================================================
+   3. Portada (hero)
+   ========================================================================== */
+
+.hero {
+    background: linear-gradient(135deg, var(--celeste-deep), var(--celeste-deep-2));
+    color: #fff;
+    padding: 4.5rem 0;
+    /* La fila .g-5 tiene márgenes negativos más anchos que el relleno del .container:
+       sin esto, en celulares la portada se desplaza 12 px hacia los costados. */
+    overflow-x: clip;
+}
+
+.hero h1 {
+    color: #fff;
+    font-size: clamp(2rem, 5vw, 3.1rem);
+    line-height: 1.15;
+}
+
+.hero p.lead {
+    color: rgba(255, 255, 255, 0.82);
+    max-width: 30rem;
+}
+
+.hero-imagen {
+    position: relative;
+    aspect-ratio: 4 / 3.1;
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    background:
+        radial-gradient(circle at 25% 20%, rgba(255, 255, 255, 0.16), transparent 45%),
+        repeating-linear-gradient(115deg, rgba(255, 255, 255, 0.07) 0 2px, transparent 2px 26px),
+        linear-gradient(200deg, #3b8cbe 0%, #0e5c8c 60%, #0a3b63 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.hero-imagen .material-symbols-outlined {
+    font-size: 3.5rem;
+}
+
+.hero-imagen strong {
+    font-family: var(--fuente-titulo);
+    font-size: 1.6rem;
+    letter-spacing: 0.05em;
+}
+
+.hero-imagen small {
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.72rem;
+    color: rgba(255, 255, 255, 0.65);
+}
+
+/* Imagen de la portada cargada desde "Datos del instituto": cubre todo el recuadro. */
+.hero-foto {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.hero-insignia {
+    position: absolute;
+    z-index: 1;
+    top: 1rem;
+    right: 1rem;
+    background: #fff;
+    color: var(--celeste-deep);
+    border-radius: 999px;
+    padding: 0.45rem 0.9rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.btn-blanco {
+    background: #fff;
+    color: var(--celeste-deep);
+    font-weight: 600;
+}
+
+.btn-blanco:hover {
+    background: var(--celeste-soft);
+    color: var(--celeste-deep);
+}
+
+.btn-blanco-borde {
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #fff;
+    font-weight: 600;
+}
+
+.btn-blanco-borde:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+/* ==========================================================================
+   4. Secciones
+   ========================================================================== */
+
+.seccion {
+    padding: 4.5rem 0;
+    scroll-margin-top: 72px;
+}
+
+.seccion-celeste {
+    background: rgba(228, 242, 251, 0.45);
+}
+
+.etiqueta-seccion {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--celeste);
+}
+
+.etiqueta-seccion::before {
+    content: "";
+    display: inline-block;
+    width: 24px;
+    height: 2px;
+    background: var(--celeste);
+}
+
+.enlace-flecha {
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.volver {
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+/* ==========================================================================
+   5. Tarjetas y listados
+   ========================================================================== */
+
+.tarjeta {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 0.75rem;
+    transition: transform 0.15s, box-shadow 0.15s;
+    height: 100%;
+}
+
+.tarjeta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(15, 42, 67, 0.12);
+}
+
+.tarjeta-foto {
+    display: block;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+}
+
+.tarjeta-foto img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.foto-institucional {
+    background:
+        radial-gradient(circle at 70% 25%, rgba(255, 255, 255, 0.45), transparent 45%),
+        linear-gradient(150deg, #cde6f4 0%, #3f8fbe 100%);
+}
+
+.chip {
+    display: inline-block;
+    background: var(--celeste-soft);
+    color: var(--celeste-deep);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.65rem;
+    border-radius: 999px;
+}
+
+.chip-oscuro {
+    background: var(--celeste-deep);
+    color: #fff;
+}
+
+.filtro-tag {
+    border: 1px solid var(--line);
+    background: #fff;
+    color: var(--ink-soft);
+    border-radius: 999px;
+    padding: 0.4rem 1rem;
+    font-size: 0.88rem;
+    font-weight: 600;
+}
+
+.filtro-tag:hover {
+    border-color: var(--celeste);
+    color: var(--ink);
+}
+
+.filtro-tag.activo {
+    background: var(--celeste-deep);
+    border-color: var(--celeste-deep);
+    color: #fff;
+}
+
+.meta {
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+}
+
+.noticia-secundaria .foto-mini {
+    width: 120px;
+    height: 88px;
+    border-radius: 0.5rem;
+    flex-shrink: 0;
+    overflow: hidden;
+    display: block;
+}
+
+.noticia-secundaria .foto-mini img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.noticia-destacada .tarjeta-foto {
+    border-radius: 0.6rem;
+    position: relative;
+}
+
+.noticia-destacada .chip {
+    position: absolute;
+    top: 0.9rem;
+    left: 0.9rem;
+}
+
+/* ==========================================================================
+   6. Detalle de noticias, posteos y carreras
+   ========================================================================== */
+
+.detalle {
+    max-width: 720px;
+}
+
+.detalle-carrera {
+    max-width: 860px;
+}
+
+.contenido-enriquecido {
+    font-size: 1.05rem;
+    line-height: 1.75;
+}
+
+.contenido-enriquecido h1, .contenido-enriquecido h2, .contenido-enriquecido h3 {
+    margin-top: 1.8rem;
+    margin-bottom: 0.8rem;
+}
+
+.contenido-enriquecido ul, .contenido-enriquecido ol {
+    padding-left: 1.4rem;
+}
+
+/* Quill 2 guarda las listas con viñetas como <ol><li data-list="bullet">. */
+.contenido-enriquecido li[data-list="bullet"] {
+    list-style-type: disc;
+}
+
+/* Los enlaces del texto van subrayados para que se distingan del resto. */
+.contenido-enriquecido a {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+/* Clases que agrega Quill para la alineación y la tipografía. */
+.contenido-enriquecido .ql-align-center { text-align: center; }
+.contenido-enriquecido .ql-align-right { text-align: right; }
+.contenido-enriquecido .ql-align-justify { text-align: justify; }
+.contenido-enriquecido .ql-font-serif { font-family: Georgia, "Times New Roman", serif; }
+.contenido-enriquecido .ql-font-monospace { font-family: var(--bs-font-monospace); }
+
+.contenido-enriquecido img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+}
+
+.contenido-enriquecido pre {
+    background: #f4f6f8;
+    border: 1px solid var(--line);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    font-size: 0.9rem;
+    overflow-x: auto;
+}
+
+/* Videos de YouTube o Vimeo insertados con el editor. */
+.contenido-enriquecido .ql-video {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border: 0;
+    border-radius: 0.5rem;
+    margin: 1rem 0;
+}
+
+.anio-plan {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 0.75rem;
+    padding: 1.25rem;
+    height: 100%;
+}
+
+.anio-plan h3 {
+    color: var(--celeste-deep);
+    font-size: 1rem;
+}
+
+.anio-plan li {
+    color: var(--ink-soft);
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-start;
+}
+
+.anio-plan li::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--celeste);
+    margin-top: 0.5rem;
+    flex-shrink: 0;
+}
+
+.caja-contacto {
+    background: var(--celeste-soft);
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+}
+
+/* ==========================================================================
+   7. Formularios de ingreso
+   ========================================================================== */
+
+.caja-login {
+    max-width: 420px;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 0.75rem;
+    padding: 2rem;
+}
+
+/* ==========================================================================
+   8. Pie del sitio
+   ========================================================================== */
+
+.pie {
+    background: var(--celeste-deep-2);
+    color: rgba(228, 242, 251, 0.8);
+    padding: 3.5rem 0 1.5rem;
+    scroll-margin-top: 72px;
+}
+
+.pie a {
+    color: rgba(228, 242, 251, 0.8);
+}
+
+.pie a:hover {
+    color: #fff;
+}
+
+.pie-titulo {
+    font-family: inherit;
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+}
+
+.pie ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+.pie li {
+    margin-bottom: 0.6rem;
+}
+
+.pie .marca-texto small {
+    color: rgba(228, 242, 251, 0.7);
+}
+
+.pie .marca-texto strong {
+    color: #fff;
+}
+
+.pie-linea {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin-top: 2.5rem;
+    padding-top: 1.25rem;
+    font-size: 0.78rem;
+}
+
+/* ==========================================================================
+   9. Utilidades y componentes de Bootstrap
+   ========================================================================== */
+
+.btn-primary {
+    --bs-btn-bg: var(--celeste);
+    --bs-btn-border-color: var(--celeste);
+    --bs-btn-hover-bg: var(--celeste-strong);
+    --bs-btn-hover-border-color: var(--celeste-strong);
+    --bs-btn-active-bg: var(--celeste-deep);
+    --bs-btn-active-border-color: var(--celeste-deep);
+}
+
+.icono-lleno {
+    font-variation-settings: 'FILL' 1;
+}
+
+.separador-o {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--ink-soft);
+    font-size: 0.8rem;
+}
+
+.separador-o::before, .separador-o::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+}
+
+.resultados li {
+    padding: 0.6rem 0;
+    border-bottom: 1px solid var(--line);
+}
+
+.pagination {
+    --bs-pagination-active-bg: var(--celeste-deep);
+    --bs-pagination-active-border-color: var(--celeste-deep);
+    --bs-pagination-color: var(--celeste-deep);
+}
+
+.texto-angosto {
+    max-width: 36rem;
+}
+
+.buscador-pagina {
+    max-width: 520px;
+}
+
+/* PDF de una carrera mostrado dentro de la página (carreras/documento). */
+.visor-pdf {
+    display: block;
+    width: 100%;
+    height: 80vh;
+    min-height: 420px;
+    border: 1px solid var(--line);
+    border-radius: 0.75rem;
+    background: #fff;
+}
