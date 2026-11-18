@@ -32,8 +32,7 @@ $institucion = [
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?= esc($titulo) ?> | Administración ISGB</title>
     <?= csrf_meta() ?>
-    <link rel="icon" href="<?= recurso('favicon.ico') ?>" sizes="any">
-    <link rel="icon" type="image/png" href="<?= recurso('img/icono-192.png') ?>">
+    <link rel="icon" type="image/png" href="<?= recurso('img/logo.png') ?>">
     <link rel="apple-touch-icon" href="<?= recurso('img/apple-touch-icon.png') ?>">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.bootstrap5.min.css">

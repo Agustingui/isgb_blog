@@ -35,8 +35,7 @@ $rol         = session('rol');
         <meta name="twitter:card" content="summary">
     <?php endif ?>
     <link rel="alternate" type="application/rss+xml" title="Instituto Superior Gaspar Benavento" href="<?= base_url('rss.xml') ?>">
-    <link rel="icon" href="<?= recurso('favicon.ico') ?>" sizes="any">
-    <link rel="icon" type="image/png" href="<?= recurso('img/icono-192.png') ?>">
+    <link rel="icon" type="image/png" href="<?= recurso('img/logo.png') ?>">
     <link rel="apple-touch-icon" href="<?= recurso('img/apple-touch-icon.png') ?>">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0">
