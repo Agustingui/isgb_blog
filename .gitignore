@@ -124,3 +124,14 @@ _modules/*
 
 /results/
 /phpunit.xml
+
+#-------------------------
+# Configuración personal de agentes de IA (no se sube; el contexto común está en AGENTS.md)
+#-------------------------
+CLAUDE.local.md
+.claude/settings.local.json
+
+#-------------------------
+# Archivos subidos desde el panel (imágenes y PDF): son de la base local de cada uno, no se suben
+#-------------------------
+/public/uploads/*

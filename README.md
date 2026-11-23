@@ -140,6 +140,22 @@ sudo chown -R $APACHE_USER:$APACHE_USER writable public/uploads
 sudo chmod -R 775 writable public/uploads
 ```
 
+## Problemas comunes en Windows (XAMPP)
+
+El XAMPP de Windows trae apagadas dos extensiones de PHP que el proyecto necesita:
+
+- **zip**: sin ella, `composer install` falla con *"The zip extension and unzip/7z commands are both missing"*.
+- **gd**: sin ella, no se pueden subir imágenes (el sitio las achica al guardarlas). En `writable/logs/` aparece *"The framework needs the following extension(s) installed and loaded: GD"*.
+
+Para activarlas, abrí `C:\xampp\php\php.ini`, buscá estas dos líneas y sacales el `;` del principio:
+
+```ini
+extension=gd
+extension=zip
+```
+
+Después reiniciá el servidor (Apache desde el panel de XAMPP, o `php spark serve`). Con `php -m` podés comprobar que aparezcan `gd` y `zip`.
+
 ## Cómo está organizado
 
 ```text
