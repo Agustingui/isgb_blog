@@ -831,6 +831,97 @@ table.dataTable td.dt-type-date {
     text-decoration: none;
 }
 
+/* Plan de estudios: lista de materias que se ordena arrastrando (ver iniciarPlanEstudios() en admin.js). */
+.lista-materias {
+    list-style: none;
+    margin: 0 0 0.5rem;
+    padding: 0.4rem;
+    min-height: 3.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    border: 1px dashed #c5d8e6;
+    border-radius: var(--bs-border-radius);
+    background: #f9fbfd;
+}
+
+/* Año sin materias: el recuadro vacío también sirve para soltar materias de otro año. */
+.lista-materias:empty::before {
+    content: "Sin materias todavía";
+    display: block;
+    padding: 0.55rem 0.5rem;
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--ink-soft);
+}
+
+.materia {
+    display: flex;
+    align-items: center;
+    gap: 0.15rem;
+    padding: 0.15rem 0.2rem;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 0.5rem;
+}
+
+.materia:focus-within {
+    border-color: #7fb4d6;
+    box-shadow: 0 0 0 0.2rem var(--bs-focus-ring-color);
+}
+
+/* El campo va sin borde propio: el borde y el foco los muestra el renglón entero. */
+.materia .form-control,
+.materia .form-control:focus {
+    border: 0;
+    box-shadow: none;
+    padding-left: 0.25rem;
+}
+
+.asa-materia {
+    color: var(--ink-soft);
+    cursor: grab;
+    padding: 0.2rem 0.1rem;
+    /* En celulares el dedo arrastra la materia en lugar de desplazar la página. */
+    touch-action: none;
+}
+
+.asa-materia:active {
+    cursor: grabbing;
+}
+
+.materia .btn-icono {
+    --bs-btn-padding-x: 0.25rem;
+    --bs-btn-padding-y: 0.2rem;
+}
+
+.materia .btn-icono .material-symbols-outlined {
+    font-size: 1.05rem;
+}
+
+/* Lugar donde va a caer la materia mientras se arrastra (clases de SortableJS). */
+.materia-fantasma {
+    opacity: 0.45;
+    background: var(--celeste-soft);
+}
+
+.materia-elegida {
+    box-shadow: 0 8px 20px rgba(15, 42, 67, 0.15);
+}
+
+.contador-materias {
+    display: inline-block;
+    min-width: 1.4rem;
+    margin-left: 0.25rem;
+    padding: 0 0.4rem;
+    border-radius: 999px;
+    background: var(--celeste-soft);
+    color: var(--celeste-deep);
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-align: center;
+}
+
 /* Datos del instituto: índice y zonas (Portada del sitio / Pie de página). */
 .indice-zonas {
     display: grid;

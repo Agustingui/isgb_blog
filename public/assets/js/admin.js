@@ -8,9 +8,10 @@
  * - Vista previa de la imagen de portada (elegida o subida en el formulario).
  * - Botón para mostrar u ocultar la contraseña.
  * - Vista previa de los textos de la portada del sitio.
+ * - Plan de estudios de las carreras: materias que se ordenan arrastrando.
  *
- * Requiere jQuery, Bootstrap 5 y comun.js. DataTables y Quill se cargan
- * solo en las páginas que los usan; cada módulo verifica que existan.
+ * Requiere jQuery, Bootstrap 5 y comun.js. DataTables, Quill y SortableJS se
+ * cargan solo en las páginas que los usan; cada módulo verifica que existan.
  */
 $(function () {
     'use strict';
@@ -497,6 +498,202 @@ $(function () {
         actualizar();
     };
 
+    /**
+     * Plan de estudios de las carreras: cambia el textarea de cada año ([data-plan-anio])
+     * por una lista con un campo por materia.
+     *
+     * - Las materias se arrastran desde el ícono ⠿, dentro del año o a otro año (SortableJS).
+     * - Enter agrega una materia debajo; Backspace en una vacía la quita.
+     * - Alt + ↑ / ↓ mueve la materia: es la alternativa al arrastre con el teclado.
+     * - Pegar varias líneas crea una materia por línea (por ejemplo, copiadas de un PDF).
+     *
+     * Lo que se envía sigue siendo el textarea (una materia por línea): queda oculto y se
+     * actualiza con cada cambio, así AdminCarreras::guardar() no cambia. Si SortableJS no
+     * cargó, todo funciona menos el arrastre.
+     *
+     * @returns {void}
+     */
+    const iniciarPlanEstudios = () => {
+        const $anios = $('[data-plan-anio]');
+
+        if (!$anios.length) {
+            return;
+        }
+
+        const puedeArrastrar = typeof Sortable !== 'undefined';
+
+        $('[data-ayuda-plan]').text('Escribí una materia y apretá Enter para agregar otra. Los años sin materias no se muestran en el sitio.');
+
+        /**
+         * Arma el renglón de una materia: asa para arrastrar, campo de texto y botón para quitarla.
+         *
+         * @param {string} texto Nombre de la materia.
+         * @returns {jQuery}
+         */
+        const crearMateria = (texto) => $('<li class="materia">').append(
+            $('<span class="material-symbols-outlined asa-materia" aria-hidden="true">drag_indicator</span>').prop('hidden', !puedeArrastrar),
+            $('<input type="text" class="form-control form-control-sm" maxlength="200" placeholder="Nombre de la materia">').val(texto),
+            '<button type="button" class="btn btn-icono peligro quitar-materia" title="Quitar materia">' +
+                '<span class="material-symbols-outlined" aria-hidden="true">close</span>' +
+                '<span class="visually-hidden">Quitar materia</span>' +
+            '</button>'
+        );
+
+        /**
+         * Copia las materias de un año a su textarea, actualiza el contador y el nombre
+         * accesible de cada campo (cambia cuando una materia pasa a otro año).
+         *
+         * @param {jQuery} $bloque Bloque [data-plan-anio].
+         * @returns {void}
+         */
+        const sincronizar = ($bloque) => {
+            const etiqueta = $bloque.data('etiqueta');
+            const $campos = $bloque.find('.materia input');
+            const materias = $campos.map(function () { return this.value.trim(); }).get().filter(Boolean);
+
+            $bloque.find('textarea').val(materias.join('\n'));
+            $bloque.find('.contador-materias').text(materias.length);
+            $campos.each(function (indice) {
+                this.setAttribute('aria-label', `Materia ${indice + 1} de ${etiqueta}`);
+            });
+        };
+
+        const sincronizarTodo = () => $anios.each(function () { sincronizar($(this)); });
+
+        /**
+         * Agrega materias después de un renglón (o al final de la lista) y enfoca la primera.
+         *
+         * @param {jQuery} $lista Lista del año.
+         * @param {jQuery|null} $despues Renglón después del cual se agregan.
+         * @param {string[]} textos Nombres de las materias.
+         * @returns {void}
+         */
+        const agregar = ($lista, $despues, textos) => {
+            const $nuevas = $(textos.map((texto) => crearMateria(texto)[0]));
+
+            if ($despues && $despues.length) {
+                $despues.after($nuevas);
+            } else {
+                $lista.append($nuevas);
+            }
+
+            $nuevas.first().find('input').trigger('focus');
+            sincronizar($lista.closest('[data-plan-anio]'));
+        };
+
+        $anios.each(function () {
+            const $bloque = $(this);
+            const $area = $bloque.find('textarea');
+            const $etiqueta = $bloque.find('label');
+            const idEtiqueta = `etiqueta-${$area.attr('id')}`;
+            const $lista = $('<ul class="lista-materias">').attr('aria-labelledby', idEtiqueta);
+
+            $bloque.data('etiqueta', $etiqueta.text().trim());
+
+            // La etiqueta ahora nombra a la lista: el textarea queda oculto y solo se usa para enviar.
+            $etiqueta.removeAttr('for').attr('id', idEtiqueta)
+                .append(' <span class="contador-materias" title="Cantidad de materias"></span>');
+
+            $area.val().split('\n').map((linea) => linea.trim()).filter(Boolean)
+                .forEach((texto) => $lista.append(crearMateria(texto)));
+
+            $area.addClass('d-none').attr({ 'aria-hidden': 'true', tabindex: '-1' }).after(
+                $lista,
+                '<button type="button" class="btn btn-sm btn-suave agregar-materia">' +
+                    '<span class="material-symbols-outlined" aria-hidden="true">add</span> Agregar materia' +
+                '</button>'
+            );
+
+            if (puedeArrastrar) {
+                // group: las listas de todos los años comparten grupo, así una materia pasa de un año a otro.
+                new Sortable($lista[0], {
+                    group: 'plan-estudios',
+                    handle: '.asa-materia',
+                    animation: 150,
+                    ghostClass: 'materia-fantasma',
+                    chosenClass: 'materia-elegida',
+                    onEnd: sincronizarTodo
+                });
+            }
+
+            sincronizar($bloque);
+        });
+
+        $(document).on('click', '.agregar-materia', function () {
+            agregar($(this).siblings('.lista-materias'), null, ['']);
+        });
+
+        $(document).on('click', '.quitar-materia', function () {
+            const $bloque = $(this).closest('[data-plan-anio]');
+
+            $(this).closest('.materia').remove();
+            sincronizar($bloque);
+        });
+
+        $(document).on('input', '.materia input', function () {
+            sincronizar($(this).closest('[data-plan-anio]'));
+        });
+
+        $(document).on('keydown', '.materia input', function (evento) {
+            const $materia = $(this).closest('.materia');
+            const $bloque = $materia.closest('[data-plan-anio]');
+
+            // Enter no envía el formulario: agrega una materia debajo.
+            if (evento.key === 'Enter') {
+                evento.preventDefault();
+                agregar($materia.parent(), $materia, ['']);
+                return;
+            }
+
+            // Backspace en una materia vacía la quita y vuelve a la anterior (como en una lista de tareas).
+            if (evento.key === 'Backspace' && this.value === '') {
+                evento.preventDefault();
+                const $destino = $materia.prev('.materia').length ? $materia.prev('.materia') : $materia.next('.materia');
+
+                $materia.remove();
+                $destino.find('input').trigger('focus');
+                sincronizar($bloque);
+                return;
+            }
+
+            // Alt + ↑ / ↓: mueve la materia un lugar dentro del año.
+            if (evento.altKey && (evento.key === 'ArrowUp' || evento.key === 'ArrowDown')) {
+                evento.preventDefault();
+
+                if (evento.key === 'ArrowUp') {
+                    $materia.prev('.materia').before($materia);
+                } else {
+                    $materia.next('.materia').after($materia);
+                }
+
+                this.focus();
+                sincronizar($bloque);
+            }
+        });
+
+        // Pegar varias líneas: una materia por línea.
+        $(document).on('paste', '.materia input', function (evento) {
+            const texto = evento.originalEvent.clipboardData?.getData('text') ?? '';
+            const lineas = texto.split(/\r?\n/).map((linea) => linea.trim()).filter(Boolean);
+
+            if (lineas.length < 2) {
+                return;
+            }
+
+            evento.preventDefault();
+            const $materia = $(this).closest('.materia');
+
+            if (this.value.trim() === '') {
+                this.value = lineas.shift();
+            }
+
+            agregar($materia.parent(), $materia, lineas);
+        });
+
+        // Por las dudas, se vuelve a copiar todo justo antes de enviar.
+        $anios.closest('form').on('submit', sincronizarTodo);
+    };
+
     iniciarTablas();
     iniciarBorrado();
     iniciarSlugs();
@@ -504,4 +701,5 @@ $(function () {
     iniciarImagenPortada();
     iniciarVerPassword();
     iniciarVistaPortada();
+    iniciarPlanEstudios();
 });

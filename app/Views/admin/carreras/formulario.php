@@ -79,17 +79,21 @@ if (session()->has('_ci_old_input')) {
             </div>
         </section>
 
-<?php // --- Plan de estudios: un textarea por año --- ?>
+<?php
+// --- Plan de estudios: un textarea por año ---
+// admin.js (iniciarPlanEstudios) cambia cada textarea por una lista de materias que se
+// ordenan arrastrando, y copia la lista al textarea, que es lo que se envía (una materia por línea).
+?>
         <section class="card">
             <div class="card-header">
                 <h2 class="card-titulo"><span class="material-symbols-outlined" aria-hidden="true">list_alt</span> Plan de estudios</h2>
             </div>
             <fieldset class="card-body p-4">
                 <legend class="visually-hidden">Materias de cada año</legend>
-                <p class="form-text mt-0 mb-3">Una materia por línea. Los años que dejes vacíos no se muestran.</p>
+                <p class="form-text mt-0 mb-3" data-ayuda-plan>Una materia por línea. Los años que dejes vacíos no se muestran.</p>
                 <div class="row g-3">
                     <?php for ($anio = 1; $anio <= 6; $anio++): ?>
-                        <div class="col-md-6 col-xl-4">
+                        <div class="col-md-6 col-xl-4" data-plan-anio>
                             <label class="form-label" for="anio<?= $anio ?>"><?= $anio ?>.º año</label>
                             <textarea name="anio<?= $anio ?>" id="anio<?= $anio ?>" rows="5" class="form-control"><?= old('anio' . $anio, esc(implode("\n", $planes[$anio] ?? []))) ?></textarea>
                         </div>

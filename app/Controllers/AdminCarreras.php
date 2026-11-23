@@ -29,6 +29,7 @@ class AdminCarreras extends BaseController
             'pdfs'     => $this->listaPdfs(),
             'titulo'   => 'Nueva carrera',
             'menu'     => 'carreras',
+            'ordenar'  => true,
         ]);
     }
 
@@ -60,6 +61,7 @@ class AdminCarreras extends BaseController
             'pdfs'     => $this->listaPdfs(),
             'titulo'   => 'Editar carrera',
             'menu'     => 'carreras',
+            'ordenar'  => true,
         ]);
     }
 

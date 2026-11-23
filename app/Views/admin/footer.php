@@ -3,6 +3,7 @@
  * Layout del panel: cierra <main>, modal de borrado y scripts.
  *
  * @var string|null $editor 'quill' para cargar la librería del editor.
+ * @var bool|null $ordenar true para cargar SortableJS (listas que se ordenan arrastrando, como el plan de estudios).
  */
 ?>
         </main>
@@ -38,6 +39,9 @@
 <script src="https://cdn.datatables.net/2.1.8/js/dataTables.bootstrap5.min.js"></script>
 <?php if (($editor ?? null) === 'quill'): ?>
     <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+<?php endif ?>
+<?php if ($ordenar ?? false): ?>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js"></script>
 <?php endif ?>
 <script src="<?= recurso('assets/js/comun.js') ?>"></script>
 <script src="<?= recurso('assets/js/admin.js') ?>"></script>

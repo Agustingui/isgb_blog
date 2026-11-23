@@ -105,6 +105,26 @@ if (! function_exists('es_pdf')) {
     }
 }
 
+if (! function_exists('peso_legible')) {
+    /**
+     * Peso de un archivo en KB o MB, por ejemplo "245 KB" o "1,8 MB". Devuelve '' si falta el dato.
+     *
+     * No usa number_to_size() de CodeIgniter porque esa necesita la extensión intl de PHP.
+     */
+    function peso_legible($bytes)
+    {
+        if ($bytes === null) {
+            return '';
+        }
+
+        if ($bytes < 1024 * 1024) {
+            return max(1, (int) round($bytes / 1024)) . ' KB';
+        }
+
+        return number_format($bytes / (1024 * 1024), 1, ',', '.') . ' MB';
+    }
+}
+
 if (! function_exists('url_pagina')) {
     /**
      * URL actual con otro número de página, conservando los demás filtros (?q=, ?mes=, ...).
@@ -390,10 +410,10 @@ if (! function_exists('portada_textos')) {
             'portada_etiqueta'      => 'Gestión estatal · Título oficial',
             'portada_titulo'        => 'Formá tu futuro profesional en el Instituto Superior Gaspar Benavento',
             'portada_texto'         => 'Tecnicaturas con título oficial y prácticas profesionalizantes desde el primer año y una comunidad que acompaña cada etapa de tu formación.',
-            'portada_boton1_texto'  => 'Ver oferta académica',
-            'portada_boton1_enlace' => '#oferta',
-            'portada_boton2_texto'  => 'Ver noticias',
-            'portada_boton2_enlace' => '#noticias',
+            'portada_boton1_texto'  => 'Ir al campus',
+            'portada_boton1_enlace' => 'https://isgbenavento-vitoria-ers.infd.edu.ar/aula/acceso.cgi',
+            'portada_boton2_texto'  => 'Ver oferta académica',
+            'portada_boton2_enlace' => '#oferta',
         ];
 
         $textos = [];

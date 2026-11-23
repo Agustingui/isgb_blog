@@ -15,8 +15,23 @@ class AdminMedia extends BaseController
 
     public function index()
     {
+        $archivos = $this->db->table('media')->where('fecha_borrado', null)->orderBy('id', 'DESC')->get()->getResultArray();
+
+        // Peso y resolución se leen del archivo en disco (no se guardan en la base).
+        // Si el archivo no está en esta compu (uploads/ no se sube al repo), quedan en null.
+        foreach ($archivos as &$archivo) {
+            $ruta    = FCPATH . 'uploads/' . basename($archivo['archivo']);
+            $existe  = is_file($ruta);
+            $medidas = $existe && ! es_pdf($archivo['archivo']) ? @getimagesize($ruta) : false;
+
+            $archivo['peso']  = $existe ? filesize($ruta) : null;
+            $archivo['ancho'] = $medidas ? $medidas[0] : null;
+            $archivo['alto']  = $medidas ? $medidas[1] : null;
+        }
+        unset($archivo);
+
         return $this->vistaAdmin('admin/media/listado', [
-            'archivos' => $this->db->table('media')->where('fecha_borrado', null)->orderBy('id', 'DESC')->get()->getResultArray(),
+            'archivos' => $archivos,
             'titulo'   => 'Archivos',
             'menu'     => 'media',
         ]);
